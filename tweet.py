@@ -12,13 +12,20 @@ api = tweepy.API(auth)
 
 screen_name = "ryuu_yrrrr"
 
-tweet_data=[]
-for tweet in tweepy.Cursor(api.user_timeline,screen_name,exclude_replies = True).items():
-    tweet_data.append([tweet.created_at,tweet.text.replace('/n',''),tweet.favorite_count,tweet.retweet_count])
+class Tweet:
+    def __init__(self,screen_name):
+        self.screen_name = screen_name
 
-tweet_information = pd.DataFrame(tweet_data)
-tweet_information.columns = ['Time' , 'Tweet' , 'NumberofFavorite' , 'NumberofRetweet']
-tweet_information['RT']=0
-tweet_information.loc[tweet_information['Tweet'].str.startswith('RT')  ,'RT'] = 1
+    def tweets_data(self,screen_name):
+        tweet_data=[]
+        for tweet in tweepy.Cursor(api.user_timeline,screen_name,exclude_replies = True).items():
+            tweet_data.append([tweet.created_at,tweet.text.replace('/n',''),tweet.favorite_count,tweet.retweet_count])
+        tweet_information = pd.DataFrame(tweet_data)
+        tweet_information.columns = ['Time' , 'Tweet' , 'NumberofFavorite' , 'NumberofRetweet']
+        tweet_information['RT']=0
+        #RTしていたら'1'と表記する
+        tweet_information.loc[tweet_information['Tweet'].str.startswith('RT')  ,'RT'] = 1
+        print(tweet_information)
 
-print(tweet_information)
+tweet = Tweet(screen_name)
+tweet.tweets_data(screen_name)

@@ -13,11 +13,16 @@ api = tweepy.API(auth)
 
 screen_name = "tyksgk"
 
-def extract_twitter_data(screen_name):
-    twitterData = api.get_user(screen_name)
-    account_information = pd.DataFrame({screen_name : [ twitterData.followers_count ,  str(twitterData.friends_count) , str(twitterData.statuses_count)]})
-    account_information = account_information.T
-    account_information.columns = ['フォロワー数' , 'フォロー数' , '投稿数']
-    
-    print(account_information)
-extract_twitter_data(screen_name)
+class Account:
+    def __init__(self,screen_name):
+        self.screen_name = screen_name
+
+    def extract_twitter_data(self,screen_name):
+        twitterData = api.get_user(screen_name)
+        account_information = pd.DataFrame({screen_name : [ twitterData.followers_count ,  str(twitterData.friends_count) , str(twitterData.statuses_count)]})
+        account_information = account_information.T
+        account_information.columns = ['フォロワー数' , 'フォロー数' , '投稿数']
+        print(account_information)
+
+account = Account(screen_name)
+account.extract_twitter_data(screen_name)
